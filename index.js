@@ -45,7 +45,7 @@ async function init() {
 
   console.log('USING DIR', directory);
 
-  const { disc } = await api.getTracks({
+  const { disc } = await api.getDisc({
     discId: collection[0].disc.id,
     token
   });
