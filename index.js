@@ -1,8 +1,14 @@
 #!/usr/bin/env node
 const { EOL } = require('os');
+const path = require('path');
+
 const api = require('./lib/api');
 const { welcomeMsg, getCredentials, selectFormat } = require('./lib/ui');
 const fileBrowser = require('./lib/fileBrowser');
+const createDirectory = require('./lib/createDirectory');
+const Processor = require('./lib/albumProcessor');
+
+const DIRECTORY_NAME = 'MurfieBackup';
 
 async function loadAccount() {
   let user;
@@ -35,33 +41,28 @@ async function init() {
   console.log(welcomeMsg);
 
   const { token, subscription_type } = await loadAccount();
+
   const collection = await api.getCollection({ token });
 
-  // console.clear();
   console.log(`Loaded ${collection.length} discs${EOL}`);
 
-  const format = await selectFormat(subscription_type);
-  const directory = await fileBrowser();
+  let format = await selectFormat(subscription_type);
 
-  console.log('USING DIR', directory);
+  let directory = await fileBrowser();
+  const dlDir = `${DIRECTORY_NAME}_${format}`;
 
-  const { disc } = await api.getDisc({
-    discId: collection[0].disc.id,
-    token
-  });
+  if (path.basename(directory) !== dlDir) {
+    console.log(`Albums will be added to a directory named ${dlDir}`);
+    
+    directory = path.join(directory, dlDir);
+    await createDirectory(directory);
+  }
 
-  const urls = await Promise.all(
-    disc.tracks.map(t =>
-      api.getTrackUrl({
-        discId: disc.id,
-        trackId: t.id,
-        token,
-        format
-      })
-    )
-  );
+  const processor = new Processor(token, directory, format);
 
-  console.log(urls);
+  for (const disc of collection.slice(0, 3)) {
+    await processor.processDisc(disc);
+  }
 }
 
 init();
