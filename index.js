@@ -7,6 +7,7 @@ const { welcomeMsg, getCredentials, selectFormat } = require('./lib/ui');
 const fileBrowser = require('./lib/fileBrowser');
 const createDirectory = require('./lib/createDirectory');
 const Processor = require('./lib/albumProcessor');
+const progressLog = require('./lib/progressLog');
 
 const DIRECTORY_NAME = 'MurfieBackup';
 
@@ -61,7 +62,13 @@ async function init() {
   const processor = new Processor(token, directory, format);
 
   for (const disc of collection.slice(0, 3)) {
+    try {
     await processor.processDisc(disc);
+      await progressLog.success(disc, directory);
+    } catch (error) {
+      console.error(error);
+      await progressLog.error(disc, directory);
+    }
   }
 }
 

@@ -12,6 +12,8 @@
     "eslint": "^6.7.2"
   },
   "dependencies": {
+    "metaflac-js": "^1.0.5",
+    "node-id3": "^0.1.13",
     "prompts": "^2.3.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
