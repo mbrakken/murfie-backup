@@ -61,7 +61,7 @@ async function init() {
 
   const processor = new Processor(token, directory, format);
 
-  for (const disc of collection.slice(0, 3)) {
+  for (const disc of collection) {
     try {
     await processor.processDisc(disc);
       await progressLog.success(disc, directory);
