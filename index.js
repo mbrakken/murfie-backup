@@ -61,7 +61,20 @@ async function init() {
 
   const processor = new Processor(token, directory, format);
 
-  for (const disc of collection) {
+  const lastDiscProcessed = await progressLog.lastDisc(directory);
+
+  let startIdx = 0;
+
+  if (lastDiscProcessed) {
+    const lastId = Number.parseInt(lastDiscProcessed);
+    const priorIdx = collection.findIndex(c => c.disc.id === lastId);
+
+    if (priorIdx > -1) {
+      startIdx = priorIdx + 1;
+    }
+  }
+
+  for (const disc of collection.slice(startIdx)) {
     try {
     await processor.processDisc(disc);
       await progressLog.success(disc, directory);
