@@ -64,12 +64,14 @@ async function init() {
   const lastDiscProcessed = await progressLog.lastDisc(directory);
 
   let startIdx = 0;
+  let total = collection.length;
 
   if (lastDiscProcessed) {
     const lastId = Number.parseInt(lastDiscProcessed);
     const priorIdx = collection.findIndex(c => c.disc.id === lastId);
 
     if (priorIdx > -1) {
+      total = total - priorIdx;
       startIdx = priorIdx + 1;
     }
   }
@@ -78,8 +80,9 @@ async function init() {
     try {
     await processor.processDisc(disc);
       await progressLog.success(disc, directory);
+      console.log(total--, 'remaining');
     } catch (error) {
-      console.error(error);
+      console.error(error.toString());
       await progressLog.error(disc, directory);
     }
   }
