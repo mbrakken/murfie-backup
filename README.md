@@ -10,7 +10,7 @@ git clone https://github.com/mbrakken/murfie-backup.git
 * and enter the directory: 
 ```bash
 cd murfie-backup
-```bash
+```
 * Install dependencies:
 ```bash
 npm install
