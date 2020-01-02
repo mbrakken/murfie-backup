@@ -1,7 +1,7 @@
 # Murfie Backup
 
 ## Usage
-* Instal git: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+* Install git: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 * Install node: https://nodejs.org/en/download/ (I was running 12.14.0)
 * From a terminal, clone the repo: 
 ```bash
