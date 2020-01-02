@@ -71,21 +71,26 @@ async function init() {
     const priorIdx = collection.findIndex(c => c.disc.id === lastId);
 
     if (priorIdx > -1) {
-      total = total - priorIdx;
       startIdx = priorIdx + 1;
+      total = total - startIdx;
     }
   }
+
+  console.log(`${total} left to download.`);
 
   for (const disc of collection.slice(startIdx)) {
     try {
     await processor.processDisc(disc);
       await progressLog.success(disc, directory);
-      console.log(total--, 'remaining');
     } catch (error) {
-      console.error(error.toString());
+      console.error('******* ERROR:', error.toString());
       await progressLog.error(disc, directory);
     }
+
+    console.log(total--, 'remaining');
   }
+
+  console.log('All done!');
 }
 
 init();
